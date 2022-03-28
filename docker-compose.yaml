@@ -1,0 +1,53 @@
+version: '3.7'
+x-common_variables:
+  &services_hosts
+  TEST_HOST: 172.21.0.3
+
+  RIAK_SERVICE_HOST: 172.21.0.17
+  RIAK_SERVICE_PORT: 8087 
+
+services:
+  test:
+    image: cupe 
+    hostname: test
+    container_name: test
+    ports:
+      - 8089:8080 # forward graffQL
+      - 4000:4000 # dev
+    stdin_open: true
+    tty: true
+    user: ${U_ID}:${U_ID}
+    environment: *services_hosts
+    working_dir: /opt/app/
+    volumes:
+      - ${PWD}:/opt/app
+      - ${HOME}/.cache:${HOME}/.cache
+      - ${HOME}/.mix:${HOME}/.mix
+      - ${HOME}/.hex:${HOME}/.hex
+    command: bash
+    networks:
+      backend:
+        ipv4_address: 172.21.0.3
+
+
+  riak:
+    image: riak-leveldb
+    hostname: riak
+    container_name: riak
+    ports:
+      - 8087:8087
+      - 8098:8098
+    networks:
+      backend:
+        ipv4_address: 172.21.0.17
+    volumes:
+      - riak-data:/riak-data # leveldb.data_root
+
+networks:
+  backend:
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+
+volumes:
+  riak-data:

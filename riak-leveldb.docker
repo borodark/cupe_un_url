@@ -1,0 +1,6 @@
+FROM basho/riak-kv
+
+RUN echo "storage_backend = leveldb" >> /etc/riak/user.conf \
+                         && echo "search = off" >> /etc/riak/user.conf \
+                         && echo "leveldb.data_root = /riak-data" >> /etc/riak/user.conf \
+                         && mkdir -p  /riak-data && chown -R riak:riak /riak-data
