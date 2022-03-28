@@ -1,0 +1,5 @@
+<h1>Edit Cuped url</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.cuped_url_path(@conn, :update, @cuped_url)) %>
+
+<span><%= link "Back", to: Routes.cuped_url_path(@conn, :index) %></span>

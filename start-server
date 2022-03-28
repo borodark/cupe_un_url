@@ -1,0 +1,3 @@
+#!/bin/bash
+#export MIX_ENV=io
+iex --sname mix_`id -un` --cookie `id -un` -S mix phx.server

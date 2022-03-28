@@ -17,6 +17,8 @@ defmodule CupeUnUrlWeb.Router do
   scope "/", CupeUnUrlWeb do
     pipe_through :browser
 
+    resources "/links", CupedUrlController
+
     get "/", PageController, :index
   end
 

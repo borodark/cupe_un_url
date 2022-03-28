@@ -33,6 +33,7 @@ defmodule CupeUnUrl.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:valid_url, "~> 0.1.2"},
       {:riakc, "~> 2.4"},
       {:poolboy, "~> 1.5"},
       {:phoenix, "~> 1.6.6"},

@@ -6,8 +6,8 @@ defmodule CupeUnUrl.Storage.Riak do
   @behaviour Storage
 
   require Logger
-
   @bucket "shorties"
+  # TODO create bucket on start?
   @riak_basic_options [keepalive: true, auto_reconnect: true]
 
   @impl Storage
@@ -72,16 +72,16 @@ defmodule CupeUnUrl.Storage.Riak do
 
     Logger.info("read after #{inspect(res)}")
     res
-    # TODO return CupedUrl.t()
+    # TODO return {:ok, CupedUrl.t()}
   end
 
   defp read(pid, shorty) do
     case get_object(pid, @bucket, shorty) do
-      {:error, :not_found} ->
-        {:ok, []}
-
       {:ok, longy} ->
         %CupedUrl{shorty: shorty, longy: longy}
+
+      {:error, :not_found} ->
+        {:error, :not_found}
     end
   end
 
@@ -113,13 +113,12 @@ defmodule CupeUnUrl.Storage.Riak do
 
   defp write(pid, shorty, longy) do
     value = :erlang.term_to_binary(longy)
-    obj = :riakc_obj.new(@bucket, shorty, value)
-    :riakc_pb_socket.put(pid, obj)
+    :riakc_pb_socket.put(pid, :riakc_obj.new(@bucket, shorty, value))
   end
-   
 
   defp riak_worker_arguments do
-    {ip_or_env, port_or_env} = Application.get_env(:cupe_un_url, :riak_conn_opts, {"127.0.0.1", 8087})
+    {ip_or_env, port_or_env} =
+      Application.get_env(:cupe_un_url, :riak_conn_opts, {"127.0.0.1", 8087})
 
     ip =
       ip_or_env
