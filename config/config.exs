@@ -45,6 +45,7 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 config :cupe_un_url,
+  hash_id_length: 4,
   storage_module: CupeUnUrl.Storage.Riak,
   riak_conn_opts: {{:system, "RIAK_SERVICE_HOST"}, {:system, "RIAK_SERVICE_PORT"}},
   pool_config: {:riak_storage, [size: 50, max_overflow: 0]}
