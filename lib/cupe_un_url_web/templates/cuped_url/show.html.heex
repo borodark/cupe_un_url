@@ -1,18 +1,17 @@
-<h1>Show Cuped url</h1>
+<h1>New Shorty is created</h1>
 
 <ul>
 
   <li>
-    <strong>Shorty:</strong>
+    <strong>Use this Shorty </strong>
     <%= @cuped_url.shorty %>
   </li>
 
   <li>
-    <strong>Longy:</strong>
+    <strong> to access the URL bellow:</strong>
     <%= @cuped_url.longy %>
   </li>
 
 </ul>
 
-<span><%= link "Edit", to: Routes.cuped_url_path(@conn, :edit, @cuped_url) %></span> |
-<span><%= link "Back", to: Routes.cuped_url_path(@conn, :index) %></span>
+<span><%= link "Create Anotner One?", to: Routes.cuped_url_path(@conn, :new) %></span>

@@ -17,9 +17,10 @@ defmodule CupeUnUrlWeb.Router do
   scope "/", CupeUnUrlWeb do
     pipe_through :browser
 
-    resources "/links", CupedUrlController
+    get "/", CupedUrlController, :new
+    post "/", CupedUrlController, :new
 
-    get "/", PageController, :index
+    get "/oldindex", PageController, :index
   end
 
   # Other scopes may use custom stacks.

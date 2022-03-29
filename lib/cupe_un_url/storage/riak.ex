@@ -78,7 +78,7 @@ defmodule CupeUnUrl.Storage.Riak do
   defp read(pid, shorty) do
     case get_object(pid, @bucket, shorty) do
       {:ok, longy} ->
-        %CupedUrl{shorty: shorty, longy: longy}
+        %{shorty: shorty, longy: longy}
 
       {:error, :not_found} ->
         {:error, :not_found}

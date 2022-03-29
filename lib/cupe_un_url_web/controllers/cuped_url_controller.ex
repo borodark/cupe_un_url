@@ -5,30 +5,42 @@ defmodule CupeUnUrlWeb.CupedUrlController do
 
   @storage Application.compile_env(:cupe_un_url, :storage_module, Riak)
 
-  # as per req -> render new
-  def index(conn, params) do
-    new(conn, params)
-  end
-
   def new(conn, _params) do
-    changeset = CupedUrl.new
-    render(conn, "new.html", changeset: changeset)
+    shorty = CupedUrl.generate() |> IO.inspect
+    conn
+    |> render("new.html", shorty: shorty, longy: "some valid URL")
   end
 
-  def create(conn, %{"cuped_url" => cuped_url_params}) do
-    case Links.create_cuped_url(cuped_url_params) do
-      {:ok, cuped_url} ->
+  def create(conn, %{"shorty" => shorty, "longy" => longy}) do
+    %{"shorty" => shorty, "longy" => longy} |> IO.inspect()
+    # TODO validate longy
+    case @storage.write(%{shorty: shorty, longy: longy}) do
+      {:ok, %CupedUrl{shorty: shorty, longy: longy}} ->
         conn
         |> put_flash(:info, "Cuped url created successfully.")
-        |> redirect(to: Routes.cuped_url_path(conn, :show, cuped_url))
+        |> render("show.html", shorty: shorty, longy: longy)
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+      # |> redirect(to: Routes.cuped_url_path(conn, :show, cuped_url))
+
+      {:error, riak_errors} ->
+        conn
+        |> put_flash(:error, "Riak Errors: #{inspect(riak_errors)}")
+        |> render("new.html", shorty: shorty, longy: longy)
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    cuped_url = Links.get_cuped_url!(id)
-    render(conn, "show.html", cuped_url: cuped_url)
+  def show(conn, %{"shorty" => shorty}) do
+    # read(CupedUrl.shorty()) :: {:ok, CupedUrl.t()} | {:error, any()}
+    case @storage.read(shorty) do
+      {:ok, %{shorty: shorty, longy: longy}} ->
+        conn
+        |> put_flash(:info, "url found successfully!")
+        |> render("show.html", shorty: shorty, longy: longy)
+
+      {:error, riak_errors} ->
+        conn
+        |> put_flash(:error, "Riak Errors: #{inspect(riak_errors)}")
+        |> render("show.html", shorty: shorty)
+    end
   end
 end

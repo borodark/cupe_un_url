@@ -26,6 +26,19 @@ defmodule CupeUnUrl.CupedUrl do
   end
 
   @doc """
+  Constructor - Creates an empty cuped_url without :longy.
+  Error out the invalid URLs: no http://, etc 
+  ## Examples
+
+  iex> new()
+  %CupedUrl{shorty: "lowercaserandomid"}
+
+  """
+  def new() do
+    %{shorty: generate()}
+  end
+
+  @doc """
   Creates a cuped_url.
   Error out the invalid URLs: no http://, etc 
   ## Examples
@@ -39,8 +52,9 @@ defmodule CupeUnUrl.CupedUrl do
   """
   def new(long_url) do
     require ValidUrl
+
     case long_url |> ValidUrl.validate() do
-      true -> {:ok, %CupedUrl{shorty: generate(), longy: long_url}}
+      true -> {:ok, %{shorty: generate(), longy: long_url}}
       _ -> {:error, :invalid_url}
     end
   end
