@@ -19,6 +19,7 @@ defmodule CupeUnUrl.Storage.Riak do
 
     pool_arguments =
       [
+        # pool_name = :riak_storage
         {:name, {:local, pool_name}},
         {:worker_module, __MODULE__}
       ] ++ size_arguments
@@ -86,7 +87,7 @@ defmodule CupeUnUrl.Storage.Riak do
   end
 
   defp execute(function) do
-    case :poolboy.checkout(:riak_pool, _block = true) do
+    case :poolboy.checkout(:riak_storage, _block = true) do
       :full ->
         {:error, :full}
 
@@ -94,7 +95,7 @@ defmodule CupeUnUrl.Storage.Riak do
         try do
           function.(pid)
         after
-          :poolboy.checkin(:riak_pool, pid)
+          :poolboy.checkin(:riak_storage, pid)
           {:error, :poolboy_error}
         end
     end

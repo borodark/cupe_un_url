@@ -18,7 +18,7 @@ defmodule CupeUnUrlWeb.Router do
     pipe_through :browser
 
     get "/", CupedUrlController, :new
-    post "/", CupedUrlController, :new
+    post "/", CupedUrlController, :create
 
     get "/oldindex", PageController, :index
   end

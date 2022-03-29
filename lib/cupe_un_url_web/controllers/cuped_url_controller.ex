@@ -6,7 +6,8 @@ defmodule CupeUnUrlWeb.CupedUrlController do
   @storage Application.compile_env(:cupe_un_url, :storage_module, Riak)
 
   def new(conn, _params) do
-    shorty = CupedUrl.generate() |> IO.inspect
+    shorty = CupedUrl.generate() |> IO.inspect()
+
     conn
     |> render("new.html", shorty: shorty, longy: "some valid URL")
   end
@@ -15,7 +16,7 @@ defmodule CupeUnUrlWeb.CupedUrlController do
     %{"shorty" => shorty, "longy" => longy} |> IO.inspect()
     # TODO validate longy
     case @storage.write(%{shorty: shorty, longy: longy}) do
-      {:ok, %CupedUrl{shorty: shorty, longy: longy}} ->
+      :ok ->
         conn
         |> put_flash(:info, "Cuped url created successfully.")
         |> render("show.html", shorty: shorty, longy: longy)
@@ -30,7 +31,8 @@ defmodule CupeUnUrlWeb.CupedUrlController do
   end
 
   def show(conn, %{"shorty" => shorty}) do
-    # read(CupedUrl.shorty()) :: {:ok, CupedUrl.t()} | {:error, any()}
+    %{"shorty" => shorty} |> IO.inspect()
+
     case @storage.read(shorty) do
       {:ok, %{shorty: shorty, longy: longy}} ->
         conn
