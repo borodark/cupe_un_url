@@ -5,11 +5,29 @@ defmodule CupeUnUrlWeb.CupedUrlController do
 
   @storage Application.compile_env(:cupe_un_url, :storage_module, Riak)
 
+  def get_and_redirect(conn, %{"shorty" => shorty}) do
+    %{"shorty" => shorty} |> IO.inspect()
+
+    case @storage.read(shorty) do
+      %{shorty: shorty, longy: longy} ->
+        conn
+        |> put_flash(:info, "url found successfully!")
+        |> redirect(external: longy)
+
+      # |> render("show.html", shorty: shorty, longy: longy)
+
+      {:error, riak_errors} ->
+        conn
+        |> put_flash(:error, "Riak Errors: #{inspect(riak_errors)}")
+        |> render("show.html", shorty: shorty)
+    end
+  end
+
   def new(conn, _params) do
     shorty = CupedUrl.generate() |> IO.inspect()
 
     conn
-    |> render("new.html", shorty: shorty, longy: "some valid URL")
+    |> render("new.html", shorty: shorty)
   end
 
   def create(conn, %{"shorty" => shorty, "longy" => longy}) do
@@ -19,9 +37,8 @@ defmodule CupeUnUrlWeb.CupedUrlController do
       :ok ->
         conn
         |> put_flash(:info, "Cuped url created successfully.")
-        |> render("show.html", shorty: shorty, longy: longy)
-
-      # |> redirect(to: Routes.cuped_url_path(conn, :show, cuped_url))
+        # |> render("show.html", shorty: shorty, longy: longy)
+        |> redirect(to: Routes.cuped_url_path(conn, :show, shorty: shorty))
 
       {:error, riak_errors} ->
         conn
@@ -34,7 +51,7 @@ defmodule CupeUnUrlWeb.CupedUrlController do
     %{"shorty" => shorty} |> IO.inspect()
 
     case @storage.read(shorty) do
-      {:ok, %{shorty: shorty, longy: longy}} ->
+      %{shorty: shorty, longy: longy} ->
         conn
         |> put_flash(:info, "url found successfully!")
         |> render("show.html", shorty: shorty, longy: longy)

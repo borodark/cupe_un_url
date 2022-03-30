@@ -19,6 +19,9 @@ defmodule CupeUnUrlWeb.Router do
 
     get "/", CupedUrlController, :new
     post "/", CupedUrlController, :create
+    get "/show", CupedUrlController, :show
+
+    get "/:shorty", CupedUrlController, :get_and_redirect
 
     get "/oldindex", PageController, :index
   end

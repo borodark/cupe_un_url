@@ -3,13 +3,12 @@
 <ul>
 
   <li>
-    <strong>Use this Shorty </strong>
-    <%= @conn.assigns.shorty %>
-  </li>
-
-  <li>
-    <strong> to access the URL bellow:</strong>
-    <%= @conn.assigns.longy %>
+    <strong>Use this:
+    <span>
+      <%= link "http://localhost:4000/" <>  @conn.assigns.shorty , to: "http://localhost:4000/" <>  @conn.assigns.shorty %>
+    </span>
+    to access the URL <%= @conn.assigns.longy %>
+    </strong>
   </li>
 
 </ul>
