@@ -21,6 +21,7 @@ services:
     working_dir: /opt/app/
     volumes:
       - ${PWD}:/opt/app
+      - ${HOME}/.bash_aliases:${HOME}/.bashrc
       - ${HOME}/.cache:${HOME}/.cache
       - ${HOME}/.mix:${HOME}/.mix
       - ${HOME}/.hex:${HOME}/.hex

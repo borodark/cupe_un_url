@@ -1,7 +1,0 @@
-#!/bin/bash
-# export MIX_ENV=io
-#mix do clean, compile
-#mix deps.unlock --all
-#mix do deps.get, deps.compile, compile
-
-elixir --sname `id -un` --cookie `id -un` -S mix run --no-halt
