@@ -23,7 +23,7 @@ defmodule CupeUnUrlWeb.Router do
 
     get "/:shorty", CupedUrlController, :get_and_redirect
 
-    get "/oldindex", PageController, :index
+    get "/oldindex/", PageController, :index
   end
 
   # Other scopes may use custom stacks.

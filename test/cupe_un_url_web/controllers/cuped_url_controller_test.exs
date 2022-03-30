@@ -1,37 +1,27 @@
 defmodule CupeUnUrlWeb.CupedUrlControllerTest do
   use CupeUnUrlWeb.ConnCase
 
-  import CupeUnUrl.LinksFixtures
+  @create_attrs longy:
+                  "https://www.google.com/search?q=url+shortener&oq=google+u&aqs=chrome.0.69i59j69i60l3j0j69i57.1069j0j7&sourceid=chrome&ie=UTF-8",
+                shorty: "1111"
+  @invalid_attrs shorty: "2222", longy: "not realy a URL"
 
-  @create_attrs %{longy: "some longy", shorty: "some shorty"}
-  @invalid_attrs %{longy: nil, shorty: nil}
-
-  describe "new cuped_url" do
-    test "renders form", %{conn: conn} do
+  describe "new " do
+    test "renders new form", %{conn: conn} do
       conn = get(conn, Routes.cuped_url_path(conn, :new))
-      assert html_response(conn, 200) =~ "New Cuped url"
+      assert html_response(conn, 200) =~ "Get Shorty of the url"
     end
   end
 
-  describe "create cuped_url" do
-    test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.cuped_url_path(conn, :create), cuped_url: @create_attrs)
-
-      assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == Routes.cuped_url_path(conn, :show, id)
-
-      conn = get(conn, Routes.cuped_url_path(conn, :show, id))
-      assert html_response(conn, 200) =~ "Show Cuped url"
+  describe "created" do
+    test "redirects to show both shorty and lonly", %{conn: conn} do
+      conn = post(conn, Routes.cuped_url_path(conn, :create), @create_attrs)
+      assert redirected_to(conn) == Routes.cuped_url_path(conn, :show, shorty: 1111)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.cuped_url_path(conn, :create), cuped_url: @invalid_attrs)
-      assert html_response(conn, 200) =~ "New Cuped url"
+      conn = post(conn, Routes.cuped_url_path(conn, :create), @invalid_attrs)
+      assert html_response(conn, 200) =~ "Invalid URL:"
     end
-  end
-
-  defp create_cuped_url(_) do
-    cuped_url = cuped_url_fixture()
-    %{cuped_url: cuped_url}
   end
 end
